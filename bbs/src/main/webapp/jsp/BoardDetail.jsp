@@ -8,6 +8,13 @@
 <title>BoardDetail.jsp</title>
 </head>
 <body>
+
+<%
+BoardVO vo = (BoardVO)request.getAttribute("detailPage");
+session.setAttribute("detail", vo);
+%>
+
+
 	<h2>상세 페이지</h2>
 	<h3>${ requestScope.detailPage.title }</h3>
 	<br>
@@ -17,12 +24,12 @@
 	Count : ${ requestScope.detailPage.cnt }<br>
 	<hr>
 	Content : ${ requestScope.detailPage.content }<br>
-	
+
 	<hr>
-	<form method="get" action="">
-		<button type="button" onclick="location.href='/bbs/board'">목록</button>
-		<button type="button" onclick="location.href='/bbs/board'" value="">수정</button>
-		<button type="button" onclick="location.href='/bbs/board'" value="">삭제</button>
+	<form method="get" action="/bbs/detail">
+		<button type="submit" name="detail_btn" value="list">목록</button>
+		<button type="submit" name="detail_btn" value="update">수정</button>
+		<button type="submit" name="detail_btn" value="delete">삭제</button>
 	</form>
 
 </body>
