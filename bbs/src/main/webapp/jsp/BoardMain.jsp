@@ -94,15 +94,13 @@ function displayDiv(type) {
 function displayUpdateForm(cv) {
     var doms = document.getElementsByClassName(cv)
 	document.getElementById("write").style.display='block';	
-	document.getElementById("b_writer").value = 
-		                                  doms[0].textContent;
-	document.getElementById("b_title").value = 
-		                                  doms[1].textContent;
-	var str = doms[2].textContent;
+	document.getElementById("b_writer").value = doms[1].textContent;
+	document.getElementById("b_title").value = doms[2].textContent;
+	/* document.getElementById("b_content").value = doms[3].textContent;
+	var str = doms[4].textContent;
 	var ary = str.split(/\D+/g)
-	var meeting_dt = ary[0]+"-"+ary[1]+"-"+ary[2]+
-	                          "T"+ary[3]+":"+ary[4];
-	document.getElementById("b_dt").value = meeting_dt;
+	var meeting_dt = ary[0]+"-"+ary[1]+"-"+ary[2]+"T"+ary[3]+":"+ary[4];
+	document.getElementById("b_dt").value = meeting_dt; */
 	document.getElementById("divT").textContent="게시글 수정";
 	document.querySelector("#write [type=submit]").value="수정";
 	document.querySelector("#write [type=hidden]").value=cv;
@@ -129,8 +127,8 @@ function displayUpdateForm(cv) {
 검색어 : <input type="search" name="keyword">
 <input type = "submit" value="검색">
 <hr>
-<button type="button" onclick="location.href='/bbs/board'">전체 게시글 보기 
+<button type="button" onclick="location.href='/bbs/board'">전체 게시글 보기</button>
 </form>
-
+</div>
 </body>
 </html>

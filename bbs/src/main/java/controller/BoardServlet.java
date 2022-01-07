@@ -22,7 +22,7 @@ public class BoardServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String keyword = request.getParameter("b_title");
+		String keyword = request.getParameter("keyword");
 		String num = request.getParameter("num");
 		String action = request.getParameter("action");
 		
@@ -39,9 +39,11 @@ public class BoardServlet extends HttpServlet {
 			request.setAttribute("list", dao.listAll());
 		}
 		else {
+			System.out.println("search야 어디있");
 			ArrayList<BoardVO> list = dao.search(keyword);
 			if(list != null &&list.size() == 0) {
 				request.setAttribute("msg", keyword +"(이)가 포함된 글이 없습니다.");
+//				request.setAttribute("list", dao.listAll());
 			}else {
 				request.setAttribute("list", dao.search(keyword));
 			}

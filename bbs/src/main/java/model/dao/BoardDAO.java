@@ -73,16 +73,17 @@ public class BoardDAO implements Board{
 		ArrayList<BoardVO> list = new ArrayList<>();
 		Connection conn = MySQL.connect();
 		try(Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery("select num, writer, date_format(writedate, '%Y년 %m월 %d일 %H시 %i분',"
-						+ "title from board where title like '%" +keyword +"%'");) {
+				ResultSet rs = stmt.executeQuery("select num, writer, title, date_format(writedate, '%Y년 %m월 %d일 %H시 %i분'), cnt from board where title like '%" +keyword +"%'");) {
 			BoardVO vo;
 			while(rs.next()) {
 				vo = new BoardVO();
 				vo.setNum(rs.getInt(1));
 				vo.setWriter(rs.getString(2));
-				vo.setWritedate(rs.getString(3));
-				vo.setTitle(rs.getString(4));
+				vo.setTitle(rs.getString(3));
+				vo.setWritedate(rs.getString(4));
+				vo.setCnt(rs.getInt(5));
 				list.add(vo);
+				System.out.println(rs.getInt(1));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

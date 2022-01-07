@@ -42,8 +42,8 @@ public class BoardVO {
 	public int getCnt() {
 		return cnt;
 	}
-	public void setCnt() {
-		this.cnt++;
+	public void setCnt(int cnt) {
+		this.cnt = cnt;
 	}
 	
 	@Override
