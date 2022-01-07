@@ -53,10 +53,12 @@ td: nth-child(2){
 <%
 	for(BoardVO vo : blist){
 %>
+	
 	<tr>
 	<td class='<%= vo.getNum() %>'> <%= vo.getNum() %> </td>
 	<td class='<%= vo.getNum() %>'> <%= vo.getWriter() %></td>
-	<td class='<%= vo.getNum() %>'><%= vo.getTitle() %></td>
+	<td class='<%= vo.getNum() %>'><a href="/bbs/detail?num=<%= vo.getNum() %>">
+									<%= vo.getTitle() %></a></td>
 	<td class='<%= vo.getNum() %>'><%= vo.getWritedate() %></td>
 	<td class='<%= vo.getNum() %>'><%= vo.getCnt() %></td>
 	<td><a href = '/bbs/board?action=delete&num=<%= vo.getNum() %>'>

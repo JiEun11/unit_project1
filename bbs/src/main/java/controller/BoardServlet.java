@@ -18,9 +18,6 @@ import model.vo.BoardVO;
 public class BoardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("keyword");
 		String num = request.getParameter("num");
@@ -39,11 +36,9 @@ public class BoardServlet extends HttpServlet {
 			request.setAttribute("list", dao.listAll());
 		}
 		else {
-			System.out.println("search야 어디있");
 			ArrayList<BoardVO> list = dao.search(keyword);
 			if(list != null &&list.size() == 0) {
 				request.setAttribute("msg", keyword +"(이)가 포함된 글이 없습니다.");
-//				request.setAttribute("list", dao.listAll());
 			}else {
 				request.setAttribute("list", dao.search(keyword));
 			}
@@ -66,7 +61,7 @@ public class BoardServlet extends HttpServlet {
 		vo.setWriter(b_writer);
 		vo.setTitle(b_title);
 		vo.setWritedate(writeDate);
-		vo.setContent(b_content);
+//		vo.setContent(b_content);
 		if(action.equals("insert")) {
 			boolean result = dao.insert(vo);
 			if(result) {

@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
 import model.vo.BoardVO;
 
@@ -39,7 +38,31 @@ public class BoardDAO implements Board{
 		return blist;
 	}
 	
-
+	/*
+	 * 상세 페이지를 보여주는 메소드
+	 */
+	public BoardVO detailView(int num) {
+		Connection conn = MySQL.connect();
+		BoardVO vo = null;		// vo 변수 초기화
+		try(Statement stmt = conn.createStatement()) {
+			ResultSet rs = stmt.executeQuery("select num, writer, title, content, date_format(writedate, '%Y년 %m월 %d일 %H시 %i분') writedate, cnt from board where num = " + num );
+			vo = new BoardVO();
+			if(rs.next()) {
+				vo.setNum(rs.getInt("num"));
+				vo.setWriter(rs.getString("writer"));
+				vo.setTitle(rs.getString("title"));
+				vo.setContent(rs.getString("content"));
+				vo.setWritedate(rs.getString("writedate"));
+				vo.setCnt(rs.getInt("cnt"));
+			}
+		} catch (SQLException se) {
+			System.out.println(se.getMessage());
+			se.printStackTrace();
+		}
+		MySQL.close(conn);
+		return vo;
+	}
+	
 	@Override
 	/*
 	 *  게시글 작성
