@@ -116,8 +116,9 @@ function displayUpdateForm(cv) {
 작성자 : <input id = "b_writer" type = "text" name="b_writer">
 <br>
 제목 : <br>
-<textarea id = "b_title" rows="3" cols="20" name="b_title"></textarea><br>
-
+<textarea id = "b_title" rows="2" cols="30" name="b_title"></textarea><br>
+내용 : <br>
+<textarea id = "b_content" rows="4" cols="30" name="b_content"></textarea>
 <br>
 <input type = "submit" value="등록">
 <input type="reset" value="재작성">
@@ -128,7 +129,7 @@ function displayUpdateForm(cv) {
 검색어 : <input type="search" name="keyword">
 <input type = "submit" value="검색">
 <hr>
-<button type="button" onclick="location.href='/bbs/board'">전체 
+<button type="button" onclick="location.href='/bbs/board'">전체 게시글 보기 
 </form>
 
 </body>

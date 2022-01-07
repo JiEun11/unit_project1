@@ -73,7 +73,7 @@ public class BoardDAO implements Board{
 		ArrayList<BoardVO> list = new ArrayList<>();
 		Connection conn = MySQL.connect();
 		try(Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery("select num, writer, date_format(writedate, '%Y년 %m월 %d일 %H시 %i',"
+				ResultSet rs = stmt.executeQuery("select num, writer, date_format(writedate, '%Y년 %m월 %d일 %H시 %i분',"
 						+ "title from board where title like '%" +keyword +"%'");) {
 			BoardVO vo;
 			while(rs.next()) {
@@ -121,12 +121,11 @@ public class BoardDAO implements Board{
 		try(PreparedStatement pstmt = conn.prepareStatement("update board set"+
 						"writer = ?, " +
 						"title = ?, " +
-						"writedate = ? "+
+						"writedate = now() "+
 						"where num = ?");) {
 			pstmt.setString(1, vo.getWriter());
 			pstmt.setString(2, vo.getTitle());
-			pstmt.setString(3, vo.getWritedate());
-			pstmt.setInt(4, vo.getNum());
+			pstmt.setInt(3, vo.getNum());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			result = false;

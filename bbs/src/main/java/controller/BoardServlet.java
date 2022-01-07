@@ -22,14 +22,14 @@ public class BoardServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String keyword = request.getParameter("keyword");
+		String keyword = request.getParameter("b_title");
 		String num = request.getParameter("num");
 		String action = request.getParameter("action");
 		
 		Board dao = new BoardDAO();
 		if(keyword == null) {
 			if(action != null) {
-				boolean result = dao.delete(Integer.parseInt("num"));
+				boolean result = dao.delete(Integer.parseInt(num));
 				if(result) {
 					request.setAttribute("msg", "글이 성공적으로 삭제되었습니다.");
 				}else {
@@ -57,12 +57,14 @@ public class BoardServlet extends HttpServlet {
 		String action = request.getParameter("action");
 		String b_writer = request.getParameter("b_writer");
 		String b_title = request.getParameter("b_title");
+		String b_content = request.getParameter("b_content");
 		String writeDate = request.getParameter("writeDate");
 		Board dao = new BoardDAO();
 		BoardVO vo = new BoardVO();
 		vo.setWriter(b_writer);
 		vo.setTitle(b_title);
 		vo.setWritedate(writeDate);
+		vo.setContent(b_content);
 		if(action.equals("insert")) {
 			boolean result = dao.insert(vo);
 			if(result) {
