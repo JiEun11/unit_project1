@@ -90,9 +90,9 @@ public class BoardDAO implements Board{
 
 	@Override
 	/*
-	 * 게시판 글 검색  
+	 * 게시판 글 타이틀로 검색  
 	 */
-	public ArrayList<BoardVO> search(String keyword) {
+	public ArrayList<BoardVO> searchTitle(String keyword) {
 		
 		ArrayList<BoardVO> list = new ArrayList<>();
 		Connection conn = MySQL.connect();
@@ -109,18 +109,22 @@ public class BoardDAO implements Board{
 				list.add(vo);
 			}
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		MySQL.close(conn);
 		return list;
 	}
 	
-	public ArrayList<BoardVO> searchOne(String keyword) {
+	/*
+	 *  게시판 글 작성자로 검색 
+	 */
+	public ArrayList<BoardVO> searchWriter(String keyword) {
 		
 		ArrayList<BoardVO> list = new ArrayList<>();
 		Connection conn = MySQL.connect();
 		try(Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery("select num, writer, title, date_format(writedate, '%Y년 %m월 %d일 %H시 %i분'), cnt from board where title like '%" +keyword +"%'");) {
+				ResultSet rs = stmt.executeQuery("select num, writer, title, date_format(writedate, '%Y년 %m월 %d일 %H시 %i분'), cnt from board where writer like '%" +keyword +"%'");) {
 			BoardVO vo;
 			while(rs.next()) {
 				vo = new BoardVO();
@@ -131,13 +135,43 @@ public class BoardDAO implements Board{
 				vo.setCnt(rs.getInt(5));
 				list.add(vo);
 			}
+			
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		MySQL.close(conn);
 		return list;
 	}
 
+	/*
+	 *  게시판 글 내용으로 검색 
+	 */
+	public ArrayList<BoardVO> searchContent(String keyword) {
+		
+		ArrayList<BoardVO> list = new ArrayList<>();
+		Connection conn = MySQL.connect();
+		try(Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery("select num, writer, title, date_format(writedate, '%Y년 %m월 %d일 %H시 %i분'), cnt from board where content like '%" +keyword +"%'");) {
+			BoardVO vo;
+			while(rs.next()) {
+				vo = new BoardVO();
+				vo.setNum(rs.getInt(1));
+				vo.setWriter(rs.getString(2));
+				vo.setTitle(rs.getString(3));
+				vo.setWritedate(rs.getString(4));
+				vo.setCnt(rs.getInt(5));
+				list.add(vo);
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		MySQL.close(conn);
+		return list;
+	}
+	
 	@Override
 	/*
 	 * 게시글 삭제 

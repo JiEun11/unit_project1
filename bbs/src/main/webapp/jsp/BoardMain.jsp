@@ -93,6 +93,7 @@ form{
 	<select name="search_tag">
 		<option value="title">제목</option>
 		<option value="writer">작성자</option>
+		<option value="content">내용</option>
 	</select>
 	<input type="search" name="keyword">
 	<button type="submit"name="detail_btn" value="search">검색</button> 

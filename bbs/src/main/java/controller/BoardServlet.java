@@ -19,15 +19,58 @@ public class BoardServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String keyword = request.getParameter("search_tag");
+		String keyword = request.getParameter("keyword");
+		String search_tagOpt = request.getParameter("search_tag");
 		String num = request.getParameter("num");
-		String action = request.getParameter("action");
+		String detail_btn = request.getParameter("detail_btn");
+//		String action = request.getParameter("action");
 		
 		Board dao = new BoardDAO();
-		if(keyword != null && keyword.equals("title")) {
-			    
+		// 검색버튼 누른 경우 
+		if(detail_btn != null && detail_btn.equals("search")) {
+			// title로 검색한 경우 
+			if(keyword != null && search_tagOpt.equals("title")) {
+				ArrayList<BoardVO> list = dao.searchTitle(keyword);
+				
+				// 없는 타이틀 검색한 경우의 처리 
+				if(list!=null &&list.size() == 0) {
+					request.setAttribute("msg", keyword+"(이)가 포함된 글이 없습니다.");
+				}else {
+					request.setAttribute("list", list);
+				}
+				
+			// writer로 검색한 경우 
+			}else if(keyword!= null && search_tagOpt.equals("writer")) {
+				ArrayList<BoardVO> list = dao.searchWriter(keyword);
+				
+				// 없는 작성자로 검색한 경우의 처리 
+				if(list != null && list.size() == 0) {
+					request.setAttribute("msg", keyword +"(이)가 포함된 글이 없습니다.");
+				}else {
+					request.setAttribute("list", list);
+				}
+				
+			// content로 검색한 경우 
+			}else if(keyword!=null && search_tagOpt.equals("content")) {
+				ArrayList<BoardVO> list = dao.searchContent(keyword);
+				
+				// 없는 게시글로 검색한 경우의 처리 
+				if(list != null && list.size() == 0) {
+					request.setAttribute("msg", keyword +"(이)가 포함된 글이 없습니다.");
+				}else {
+					request.setAttribute("list", list);
+				}
+				
+			// 아무 것도 안 누르고 검색한 경우 그냥 main에 남아있기 
+			}else {
+				request.setAttribute("list", dao.listAll());
+			}
+		// 검색 버튼 안 누른 경우, 그냥 Main 접속 시 
+		}else {
+			request.setAttribute("list", dao.listAll());
 		}
 		
+		request.getRequestDispatcher("/jsp/BoardMain.jsp").forward(request, response);
 //		if(keyword == null) {
 //			if(action != null && action.equals("delete")) {
 //				boolean result = dao.delete(Integer.parseInt(num));
@@ -47,7 +90,7 @@ public class BoardServlet extends HttpServlet {
 //				request.setAttribute("list", dao.search(keyword));
 //			}
 //		}
-		request.getRequestDispatcher("/jsp/BoardMain.jsp").forward(request, response);
+		
 	}
 
 	/**
