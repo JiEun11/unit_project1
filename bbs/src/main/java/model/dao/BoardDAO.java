@@ -29,6 +29,7 @@ public class BoardDAO implements Board{
 				vo.setWriter(rs.getString(2));
 				vo.setTitle(rs.getString(3));
 				vo.setWritedate(rs.getString(4));
+				vo.setCnt(rs.getInt(5));
 				blist.add(vo);
 			}
 		}catch(SQLException e) {
@@ -106,7 +107,29 @@ public class BoardDAO implements Board{
 				vo.setWritedate(rs.getString(4));
 				vo.setCnt(rs.getInt(5));
 				list.add(vo);
-				System.out.println(rs.getInt(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		MySQL.close(conn);
+		return list;
+	}
+	
+	public ArrayList<BoardVO> searchOne(String keyword) {
+		
+		ArrayList<BoardVO> list = new ArrayList<>();
+		Connection conn = MySQL.connect();
+		try(Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery("select num, writer, title, date_format(writedate, '%Y년 %m월 %d일 %H시 %i분'), cnt from board where title like '%" +keyword +"%'");) {
+			BoardVO vo;
+			while(rs.next()) {
+				vo = new BoardVO();
+				vo.setNum(rs.getInt(1));
+				vo.setWriter(rs.getString(2));
+				vo.setTitle(rs.getString(3));
+				vo.setWritedate(rs.getString(4));
+				vo.setCnt(rs.getInt(5));
+				list.add(vo);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -142,21 +165,40 @@ public class BoardDAO implements Board{
 	public boolean update(BoardVO vo) {
 		boolean result = true;
 		Connection conn = MySQL.connect();
-		try(PreparedStatement pstmt = conn.prepareStatement("update board set"+
-						"writer = ?, " +
+		try(PreparedStatement pstmt = conn.prepareStatement("update board set "+
 						"title = ?, " +
-						"writedate = now() "+
+						"writedate = now(), "+
+						"content = ? " +
 						"where num = ?");) {
-			pstmt.setString(1, vo.getWriter());
-			pstmt.setString(2, vo.getTitle());
+			pstmt.setString(1, vo.getTitle());
+			pstmt.setString(2, vo.getContent());
 			pstmt.setInt(3, vo.getNum());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			result = false;
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		MySQL.close(conn);
 		return result;
+	}
+	
+	/*
+	 * 조회수 증가 
+	 */
+	public void cntIncrease(BoardVO vo) {
+		Connection conn = MySQL.connect();
+		try(PreparedStatement pstmt = conn.prepareStatement("update board set "+
+						"cnt = cnt + 1 " +
+						"where num = ?");) {
+			pstmt.setInt(1, vo.getNum());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		MySQL.close(conn);
+		return;
 	}
 	
 }

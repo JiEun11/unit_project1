@@ -25,6 +25,14 @@ tr:hover{
 td: nth-child(2){
 	width: 300px;
 }
+
+li{
+	display: inline;
+}
+form{
+
+	display: inline-block;
+}
 </style>
 <title>의진 +지은</title>
 </head>
@@ -55,16 +63,11 @@ td: nth-child(2){
 %>
 	
 	<tr>
-	<td class='<%= vo.getNum() %>'> <%= vo.getNum() %> </td>
-	<td class='<%= vo.getNum() %>'> <%= vo.getWriter() %></td>
-	<td class='<%= vo.getNum() %>'><a href="/bbs/detail?num=<%= vo.getNum() %>">
-									<%= vo.getTitle() %></a></td>
-	<td class='<%= vo.getNum() %>'><%= vo.getWritedate() %></td>
-	<td class='<%= vo.getNum() %>'><%= vo.getCnt() %></td>
-	<td><a href = '/bbs/board?action=delete&num=<%= vo.getNum() %>'>
-	<img src = "/bbs/images/delete.png" width = '30'></a></td>
-	<td><img onclick="displayUpdateForm('<%= vo.getNum() %>')" 
-			       src="/bbs/images/edit.png" width = '30'></td>
+	<td> <%= vo.getNum() %> </td>
+	<td> <%= vo.getWriter() %></td>
+	<td><a href="/bbs/detail?num=<%= vo.getNum() %>"><%= vo.getTitle() %></a></td>
+	<td><%= vo.getWritedate() %></td>
+	<td><%= vo.getCnt() %></td>
 	</tr>
 <%
 	}
@@ -81,6 +84,19 @@ td: nth-child(2){
 	}
 %>
 <hr>
+
+<form method="get" action="/bbs/detail">
+	<button type="submit" name="detail_btn" value="write">작성</button>	
+</form>
+
+<form method="get" action="/bbs/board">
+	<select name="search_tag">
+		<option value="title">제목</option>
+		<option value="writer">작성자</option>
+	</select>
+	<input type="search" name="keyword">
+	<button type="submit"name="detail_btn" value="search">검색</button> 
+</form>
 
 </body>
 </html>

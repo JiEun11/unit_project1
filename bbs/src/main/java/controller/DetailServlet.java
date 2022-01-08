@@ -22,41 +22,45 @@ public class DetailServlet extends HttpServlet {
 
 		String detail_btn = request.getParameter("detail_btn");
 		BoardDAO dao = new BoardDAO();
-
+		
+		String boardPath = null;
+		
 		if (detail_btn == null) {
 
 			String num = request.getParameter("num");
 			BoardVO vo = dao.detailView(Integer.parseInt(num));
-
+			dao.cntIncrease(vo);
+			vo.setCnt(vo.getCnt()+1);
 			request.setAttribute("detailPage", vo);
-
-			request.getRequestDispatcher("/jsp/BoardDetail.jsp").forward(request, response);
+			boardPath = "/jsp/BoardDetail.jsp";
 			
 		} else if (detail_btn.equals("list")) {
-			request.getRequestDispatcher("/board").forward(request, response);
-			
-		} else if(detail_btn.equals("create")) {
-			
+			boardPath = "/board";
 			
 		} else {
 			//BoardVO vo = (BoardVO)request.getAttribute("detail");
+			
 			HttpSession session = request.getSession();
 			BoardVO vo = (BoardVO)session.getAttribute("detail");
-			
 			
 			if (detail_btn.equals("update")) {
 				request.setAttribute("updatePage", vo);
 				session.removeAttribute("detail");
-				request.getRequestDispatcher("/jsp/updateBoard.jsp").forward(request, response);
+				boardPath = "/jsp/UpdateBoard.jsp";
+				
 			} else if (detail_btn.equals("delete")) {
 				dao.delete(vo.getNum());
 				session.removeAttribute("detail");
-				request.getRequestDispatcher("/board").forward(request, response);
-				System.out.println("delete");
+				boardPath = "/board";
+			}
+			else if(detail_btn.equals("write")) {
+				
+				boardPath = "/jsp/WriteBoard.jsp";
 			}
 			
 		}
-
+		
+		request.getRequestDispatcher(boardPath).forward(request, response);
+		
 	}
-
 }
