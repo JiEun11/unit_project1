@@ -11,6 +11,32 @@ import model.vo.BoardVO;
 
 public class BoardDAO implements Board{
 	
+	public int totalBoardCount() {
+		int total = -1;
+		Connection conn = MySQL.connect();
+		
+		try(PreparedStatement pstmt = conn.prepareStatement("SELECT COUNT(*) FROM board");) {
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next()) {
+				total = rs.getInt(1);
+			}
+//			System.out.println("total : " + total);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		MySQL.close(conn);
+		return total;
+	}
+	
+	public ArrayList<BoardVO> page() {
+		
+		ArrayList<BoardVO> blist = null;
+		Connection conn = MySQL.connect();
+		
+		
+		return blist;
+	}
+	
 	@Override
 	/*
 	 *  MainPage에서 전체 리스트 보여주는 method
@@ -71,10 +97,11 @@ public class BoardDAO implements Board{
 	public boolean insert(BoardVO vo) {
 		boolean result = true;
 		Connection conn = MySQL.connect();
-		try(PreparedStatement pstmt = conn.prepareStatement("insert into board (writer, title, writedate) values(?, ?, now())");) {
-			System.out.println(vo.getWritedate());
+
+		try(PreparedStatement pstmt = conn.prepareStatement("insert into board (writer, title, content, writedate) values (?, ?, ?, now())");) {
 			pstmt.setString(1, vo.getWriter());
 			pstmt.setString(2, vo.getTitle());
+			pstmt.setString(3, vo.getContent());
 			pstmt.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -124,7 +151,7 @@ public class BoardDAO implements Board{
 		ArrayList<BoardVO> list = new ArrayList<>();
 		Connection conn = MySQL.connect();
 		try(Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery("select num, writer, title, date_format(writedate, '%Y년 %m월 %d일 %H시 %i분'), cnt from board where writer like '%" +keyword +"%'");) {
+				ResultSet rs = stmt.executeQuery("select num, writer, title, date_format(writedate, '%Y년 %m월 %d일 %H시 %i분'), cnt from board where writer like '%" +keyword +"'");) {
 			BoardVO vo;
 			while(rs.next()) {
 				vo = new BoardVO();
@@ -135,9 +162,7 @@ public class BoardDAO implements Board{
 				vo.setCnt(rs.getInt(5));
 				list.add(vo);
 			}
-			
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		MySQL.close(conn);
@@ -222,9 +247,9 @@ public class BoardDAO implements Board{
 	 */
 	public void cntIncrease(BoardVO vo) {
 		Connection conn = MySQL.connect();
-		try(PreparedStatement pstmt = conn.prepareStatement("UPDATE board SET "+
+		try(PreparedStatement pstmt = conn.prepareStatement("update board set "+
 						"cnt = cnt + 1 " +
-						"WHERE num = ?");) {
+						"where num = ?");) {
 			pstmt.setInt(1, vo.getNum());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -240,7 +265,7 @@ public class BoardDAO implements Board{
 	 */
 	public int pageCnt(String table) {
 		int total = 0;
-		int pageCnt = -1;
+		int pageCount = -1;
 		Connection conn = MySQL.connect();
 		try (Statement stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(
@@ -248,18 +273,18 @@ public class BoardDAO implements Board{
 			if(rs.next()) {
 				total = rs.getInt("TOTAL"); 
 			}
-			pageCnt = total/10;
+			pageCount = total/10;
 			if(total%10 >= 1) {
-				pageCnt += 1;
-				System.out.println("pageCnt:" +pageCnt);
+				pageCount += 1;
+				System.out.println("pageCnt:" +pageCount);
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		MySQL.close(conn);
-		System.out.println(pageCnt);
-		return pageCnt;
+		System.out.println(pageCount);
+		return pageCount;
 	}
 	
 	/*
@@ -269,7 +294,8 @@ public class BoardDAO implements Board{
 		ArrayList<BoardVO> blist = null;
 		Connection conn = MySQL.connect();
 		try(Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT num, writer, title, date_format(writedate,'%Y년 %m월 %d일 %H시 %i분'), cnt FROM " +table+" ORDERS LIMIT "+start+", "+ end);)
+			ResultSet rs = stmt.executeQuery("SELECT num, writer, title, date_format(writedate,'%Y년 %m월 %d일 %H시 %i분'), cnt FROM " 
+		+ table+ " ORDER BY writedate DESC LIMIT "+start+", "+ end);)
 		{
 			blist = new ArrayList<>();
 			BoardVO vo = null;

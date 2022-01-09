@@ -48,10 +48,8 @@ public class BoardVO {
 	
 	@Override
 	public String toString() {
-		return "BoardVO [num="+ num + ", writer=" + writer + ", title=" + title + ", content="+
-				content + ", writedate=" + writedate + ", cnt=" + cnt + "]";
+		return "BoardVO [num="+ num + ", writer=" + writer + ", title=" + title + ", content+="+
+				content + ", writedate=" + writedate + ", cnt+=" + cnt + "]";
 	}
-	
-	
 	
 }

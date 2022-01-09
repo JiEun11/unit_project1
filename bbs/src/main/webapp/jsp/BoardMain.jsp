@@ -1,69 +1,57 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="model.vo.BoardVO, model.dao.BoardDAO, java.util.ArrayList"%>
+<%@ page import="model.vo.BoardVO, java.util.ArrayList, model.dao.BoardDAO"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <link href="https://fonts.googleapis.com/css?family=Poor+Story:400"
 	rel="stylesheet">
-<script src="https://kit.fontawesome.com/3e595d06f7.js"
-	crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.2.0/css/all.min.css" integrity="sha512-6c4nX2tn5KbzeBJo9Ywpa0Gkt+mzCzJBrE1RB6fmpcsoN+b/w/euwIMuQKNyUoU/nToKN3a8SgNOtPrbW12fug==" crossorigin="anonymous" />
 <link rel="stylesheet" href="css/boardStyle.css" />
-<title>의진 +지은</title>
+<title>What's your fav restaurant? </title>
 </head>
 <body>
+
 <%
-	BoardDAO dao = new BoardDAO();
-	int count = dao.pageCnt("board");
 	ArrayList<BoardVO> blist = (ArrayList<BoardVO>)request.getAttribute("list");
 	if(blist != null){
 %>
-	<!-- Navbar -->
-	<nav id="navbar">
-		<div class="nav_logo">
-			<i class="fas fa-birthday-cake"></i>
-			<h2>Board Main Page</h2>
-		</div>
+<!-- Navbar -->
+<div id="navbar">
+	<a href="/bbs/board"><img src="${pageContext.request.contextPath }/images/logo-removebg.png" /></a>
+	<div class="nav_login">
 
-		<div class="nav_login">
-			<ul class="nav_login">
+		<%
+			if (session.getAttribute("user") == null) {
+		%>
+		<form method="post" action="/bbs/jsp/LogIn.jsp">
+			<button type="submit" class="nav_login" name="mem_btn" value="login">로그인/회원가입</button>
+		</form>
 
-				<%
-				if (session.getAttribute("user") == null) {
-				%>
-				<form method="post" action="/bbs/jsp/LogIn.jsp">
-					<button type="submit" class="nav_login" name="mem_btn"
-						value="login">로그인/회원가입</button>
-				</form>
-
-				<%
-				} else {
-				%>
-
-				id : ${sessionScope.user.id }
-
-				<form method="post" action="/bbs/memcheck">
-					<button type="submit" class="nav_login" name="mem_btn"
-						value="mem_info">개인정보설정</button>
-					<button type="submit" class="nav_login" name="mem_btn"
-						value="logout">로그아웃</button>
-				</form>
-				<%
-				}
-				%>
-			</ul>
-		</div>
-		<hr>
-	</nav>
+		<%
+		} else {
+		%>
+		<i class="fas fa-user-circle" style="font-size: 40px; color: #4caf50;"></i> ID : ${sessionScope.user.id }
+		<br>
+		<form method="post" action="/bbs/memcheck">
+			<button type="submit" class="nav_login" name="mem_fbtn" value="mem_info">개인정보설정</button>
+			<button type="submit" class="nav_login" name="mem_btn" value="logout">로그아웃</button>
+		</form>
+		<%
+			}
+		%>
+	</div>
+</div>
+<hr>
 	<table>
 	<tr>
-	<th>글 번호</th><th>작성자</th><th>작성자</th><th>작성일</th><th>조회수</th>
+	<th>글 번호</th><th>작성자</th><th>제목</th><th>작성일</th><th>조회수</th>
 	</tr>
+	
 <%
 	for(BoardVO vo : blist){
 %>
-	
 	
 	<tr>
 	<td> <%= vo.getNum() %> </td>
@@ -86,26 +74,29 @@
 <%
 	}
 %>
-<%
-	for(int i=1; i<= count; i++){ %>
-		<a href="/bbs/board?page=<%= i%>">[<%= i %>]</a>
-		
-	<%}; %>	
 <hr>
+<div class="main_btns">
+	<form method="get" action="/bbs/detail">
+		<button type="submit" name="detail_btn" value="write">작성</button>	
+	</form>
+	
+	<form method="get" action="/bbs/board">
+		<select name="search_tag">
+			<option value="title">제목</option>
+			<option value="writer">작성자</option>
+			<option value="content">내용</option>
+		</select>
+		<input type="search" name="keyword">
+		<button type="submit"name="detail_btn" value="search">검색</button> 
+		<button type="submit" name="detail_btn" value="main">메인 페이지</button>	
+	</form>
+	
+	<form method="post" action="/bbs/board">
+		<button type="submit" name="mem_fbtn" value="list">회원 리스트</button>	
+	</form>
+</div>
 
-<form method="get" action="/bbs/detail">
-	<button type="submit" name="detail_btn" value="write">작성</button>	
-</form>
-
-<form method="get" action="/bbs/board">
-	<select name="search_tag">
-		<option value="title">제목</option>
-		<option value="writer">작성자</option>
-		<option value="content">내용</option>
-	</select>
-	<input type="search" name="keyword">
-	<button type="submit"name="detail_btn" value="search">검색</button> 
-</form>
+<jsp:include page="./bottom.jsp" flush='false' />
 
 </body>
 </html>

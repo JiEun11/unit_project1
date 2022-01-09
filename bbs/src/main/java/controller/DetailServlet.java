@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import model.dao.BoardDAO;
 import model.vo.BoardVO;
-//import model.vo.MembersVO;
+import model.vo.MembersVO;
 
 @WebServlet("/detail")
 public class DetailServlet extends HttpServlet {
@@ -24,11 +24,11 @@ public class DetailServlet extends HttpServlet {
 
 		String detail_btn = request.getParameter("detail_btn");
 		BoardDAO dao = new BoardDAO();
-		
 		String boardPath = null;
+		String msg = null;
 		
 		HttpSession session = request.getSession();
-		
+	
 		if(session.getAttribute("user") != null) {
 			if (detail_btn == null) {
 				String num = request.getParameter("num");
@@ -63,34 +63,19 @@ public class DetailServlet extends HttpServlet {
 			}
 		}
 		else {
-			System.out.println("로그인을 해주세요");
-			boardPath = "/board";
+			msg = "로그인을 해주세요";
+			boardPath = "/jsp/BoardMain.jsp";
+			request.setAttribute("msg", msg);
+			request.setAttribute("list", dao.listAll());
 		}
 		
 		request.getRequestDispatcher(boardPath).forward(request, response);
 	}
-	
+
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html; charset=UTF-8");
-		request.setCharacterEncoding("UTF-8");
-		String boardPath = "/bbs/board";
-		BoardDAO dao = new BoardDAO();
-		
-		// WriteBoard (writer, title, content)
-		PrintWriter out = response.getWriter();
-		String b_title = request.getParameter("b_title");
-		String b_writer = request.getParameter("b_writer");
-		String b_content = request.getParameter("b_content");
-		
-		BoardVO boardVO = new BoardVO();
-		boardVO.setTitle(b_title);
-		boardVO.setWriter(b_writer);
-		boardVO.setContent(b_content);
-		
-		dao.insert(boardVO);
-
-		response.sendRedirect(boardPath);
 		
 	}
+	
+	
 }

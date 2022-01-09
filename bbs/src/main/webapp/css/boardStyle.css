@@ -15,6 +15,8 @@
   --color-blue: #73aace;
   --color-yellow: #fff7d1;
   --color-orange: #feb546;
+  --color-green: #4caf50;
+  --color-table-green: #86c688;
   --color-black: #0000000;
 
   /* Font Size */
@@ -41,23 +43,269 @@
   font-family: "Poor Story";
 }
 
+a {
+  text-decoration: none;
+}
+
+a:link {
+  color: var(--color-black);
+}
+
+a:visited {
+  color: var(--color-grey);
+}
+
+a:hover {
+  color: var(--color-light-white);
+}
+
+table {
+  width: 60%;
+  margin: auto;
+  text-align: center;
+}
+
 td {
-  border-bottom: 2px dotted green;
+  border-bottom: 2px dotted var(--color-table-green);
   padding-left: 20px;
 }
 
 tr:hover {
-  background-color: var(--color-pink);
+  background-color: var(--color-green);
   font-weight: var(--weight-bold);
 }
 
-td:nth-child(2) {
+td:nth-child(3) {
   width: 300px;
 }
 
 li {
-  display: inline;
+  list-style: none;
 }
+
 form {
   display: inline-block;
 }
+
+/* Navbar in main */
+#navbar {
+  background-image: url("../images/Background.png") center/cover no-repeat;
+  padding: 20px;
+  text-align: center;
+}
+
+#navbar img {
+  max-width: 20%;
+  max-height: 20%;
+}
+
+.nav_login {
+  text-align: right;
+}
+
+.nav_login button {
+  background-color: #4caf50;
+  color: white;
+  padding: 9px 15px;
+  margin: 8px 0;
+  border: none;
+  border-radius: var(--size-border-radius);
+  cursor: pointer;
+}
+.nav_login button:hover {
+  background-color: var(--color-table-green);
+}
+
+/* after table btns */
+.main_btns {
+  text-align: center;
+  padding: 5px;
+}
+
+.main_btns button {
+  background-color: var(--color-green);
+  color: var(--color-white);
+  padding: 9px 15px;
+  margin: 8px 0;
+  border: none;
+  border-radius: var(--size-border-radius);
+  cursor: pointer;
+}
+
+.main_btns select {
+  padding: 9px 15px;
+  border: none;
+  border-radius: var(--size-border-radius);
+  background-color: var(--color-green);
+  color: var(--color-white);
+}
+
+.main_btns input[type="search"] {
+  padding: 4px 10px;
+  box-sizing: border-box;
+  border-radius: var(--size-border-radius);
+  border: 3px solid var(--color-green);
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  outline: none;
+}
+
+.main_btns input[type="search"]:focus {
+  border: 3px solid --color-grey;
+}
+/* memberinfo jsp*/
+.memberinfopage{
+	text-align: center;
+}
+
+.memberinfopage button{
+  background-color: var(--color-green);
+  color: white;
+  padding: 9px 15px;
+  margin: 8px 0;
+  border: none;
+  border-radius: var(--size-border-radius);
+  cursor: pointer;
+}
+
+.memberinfopage button:hover {
+  background-color: var(--color-table-green);
+}
+
+/* memberlist jsp*/
+.memberlistpage{
+	text-align:center;
+}
+
+.memberlistpage button{
+  background-color: var(--color-green);
+  color: white;
+  padding: 9px 15px;
+  margin: 8px 0;
+  border: none;
+  border-radius: var(--size-border-radius);
+  cursor: pointer;
+}
+
+.memberlistpage button:hover {
+  background-color: var(--color-table-green);
+}
+
+/* bottom jsp*/
+.copyright {
+  font-family: "Poor Story";
+  text-align: center;
+  background-color: var(--color-green);
+  color: var(--color-light-white);
+  font-size: var(--font-regular);
+}
+
+/* detail page*/
+.detailpage{
+  text-align:center;	
+}
+
+.detailpage button {
+  background-color: var(--color-green);
+  color: white;
+  padding: 9px 15px;
+  margin: 8px 0;
+  border: none;
+  border-radius: var(--size-border-radius);
+  cursor: pointer;
+}
+
+.detailpage button:hover {
+  background-color: var(--color-table-green);
+}
+
+/* login page*/
+.loginpage{
+	text-align:center;
+	padding: 10px;
+}
+
+.loginpage input[type="text"]{
+	margin: 2% 60% ;	
+}
+
+.loginpage input[type="password"]{
+	margin: 2% 60% ;	
+}
+
+.loginpage button {
+  background-color: var(--color-green);
+  color: white;
+  padding: 9px 15px;
+  margin: 8px 0;
+  border: none;
+  border-radius: var(--size-border-radius);
+  cursor: pointer;
+}
+.loginpage button:hover {
+  background-color: var(--color-table-green);
+}
+
+/* signUp page*/
+.signuppage{
+	text-align:center;
+	padding: 10px;
+}
+
+.signuppage input[type="text"], input[type="password"]{
+	margin: 2% 40% ;
+	
+}
+
+.signuppage button {
+  background-color: var(--color-green);
+  color: white;
+  padding: 9px 15px;
+  margin: 8px 0;
+  border: none;
+  border-radius: var(--size-border-radius);
+  cursor: pointer;
+}
+.signuppage button:hover {
+  background-color: var(--color-table-green);
+}
+
+
+/* update page */
+.updatepage{
+  text-align: center;
+  padding: 5px;
+}
+
+.updatepage button {
+  background-color: var(--color-green);
+  color: white;
+  padding: 9px 15px;
+  margin: 8px 0;
+  border: none;
+  border-radius: var(--size-border-radius);
+  cursor: pointer;
+}
+.updatepage button:hover {
+  background-color: var(--color-table-green);
+}
+
+/* write page */
+.writepage{
+  text-align: center;
+  padding: 5px;
+}
+
+.write_btns button {
+  background-color: var(--color-green);
+  color: white;
+  padding: 9px 15px;
+  margin: 8px 0;
+  border: none;
+  border-radius: var(--size-border-radius);
+  cursor: pointer;
+}
+.write_btns button:hover {
+  background-color: var(--color-table-green);
+}
+

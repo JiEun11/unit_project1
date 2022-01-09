@@ -16,13 +16,14 @@ public class MembersDAO {
 		ArrayList<MembersVO> mlist = null;
 		Connection conn = MySQL.connect();
 		try(Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT id, name FROM members");){
+			ResultSet rs = stmt.executeQuery("SELECT id, name, password FROM members");){
 			mlist = new ArrayList<>();
 			MembersVO vo = null;
 			while(rs.next()) {
 				vo = new MembersVO();
 				vo.setId(rs.getString(1));
 				vo.setName(rs.getString(2));
+				vo.setPassword(rs.getString(3));
 				mlist.add(vo);
 			}
 		}catch(SQLException e) {
