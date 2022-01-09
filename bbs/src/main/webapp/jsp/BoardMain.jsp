@@ -45,15 +45,37 @@ form{
 %>
 	<!-- Navbar -->
 	<nav id="navbar">
-	<div class="nav_logo">
-		<i class="fas fa-birthday-cake"></i>
-		<h2>Board Main Page</h2>
-	</div>
-		
+		<div class="nav_logo">
+			<i class="fas fa-birthday-cake"></i>
+			<h2>Board Main Page</h2>
+		</div>
+
 		<div class="nav_login">
 			<ul class="nav_login">
-				<li class="nav_login">Login</li>
-				<li class="nav_login">Sign</li>
+
+				<%
+				if (session.getAttribute("user") == null) {
+				%>
+				<form method="post" action="/bbs/jsp/LogIn.jsp">
+					<button type="submit" class="nav_login" name="mem_btn"
+						value="login">로그인/회원가입</button>
+				</form>
+
+				<%
+				} else {
+				%>
+
+				id : ${sessionScope.user.id }
+
+				<form method="post" action="/bbs/memcheck">
+					<button type="submit" class="nav_login" name="mem_btn"
+						value="mem_info">개인정보설정</button>
+					<button type="submit" class="nav_login" name="mem_btn"
+						value="logout">로그아웃</button>
+				</form>
+				<%
+				}
+				%>
 			</ul>
 		</div>
 		<hr>
