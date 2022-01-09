@@ -23,6 +23,8 @@ public class BoardServlet extends HttpServlet {
 		String search_tagOpt = request.getParameter("search_tag");
 		String num = request.getParameter("num");
 		String detail_btn = request.getParameter("detail_btn");
+		String scurrentPage = request.getParameter("page");
+		int currentPage = 1;
 //		String action = request.getParameter("action");
 		
 		Board dao = new BoardDAO();
@@ -65,12 +67,25 @@ public class BoardServlet extends HttpServlet {
 			}else {
 				request.setAttribute("list", dao.listAll());
 			}
-		// 검색 버튼 안 누른 경우, 그냥 Main 접속 시 
-		}else {
+ 
+		}	
+		// button 값 없는 Main 접속 시 
+		else {
+			// 1, 2, 3, ,, page 눌렀을 때
+			if( scurrentPage != null) {
+				currentPage = Integer.parseInt(scurrentPage);	// 현재페이지 int로 변경 
+				//int total = ((BoardDAO) dao).pageCnt("board");  // board테이블의 데이터 개수
+				int start = (currentPage-1)*10;   // 1, 11, 21, 31 ... 
+				int end = currentPage*10;  // 10, 20, 30, 40 ...
+				System.out.printf("start: %d, end: %d %n", start, end);
+				request.setAttribute("list", dao.pagenation("board",start, end));
+			}
+			// 검색 버튼 안 누른 경우, 그냥 Main 접속 시 
 			request.setAttribute("list", dao.listAll());
 		}
 		
 		request.getRequestDispatcher("/jsp/BoardMain.jsp").forward(request, response);
+		
 //		if(keyword == null) {
 //			if(action != null && action.equals("delete")) {
 //				boolean result = dao.delete(Integer.parseInt(num));
@@ -104,8 +119,10 @@ public class BoardServlet extends HttpServlet {
 		String b_title = request.getParameter("b_title");
 		String b_content = request.getParameter("b_content");
 		String writeDate = request.getParameter("writeDate");
+		
 		Board dao = new BoardDAO();
 		BoardVO vo = new BoardVO();
+		
 		vo.setNum(Integer.parseInt(num));
 		vo.setWriter(b_writer);
 		vo.setTitle(b_title);

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
 <%@ page import="model.vo.BoardVO, model.dao.BoardDAO, java.util.ArrayList"%>
 <!DOCTYPE html>
 <html>
@@ -7,8 +7,6 @@
 <meta charset="UTF-8">
 <link href="https://fonts.googleapis.com/css?family=Poor+Story:400"
 	rel="stylesheet">
-<script src="https://kit.fontawesome.com/3e595d06f7.js"
-	crossorigin="anonymous"></script>
 <style>
 * {
 	font-family:"Poor Story";
@@ -34,15 +32,30 @@ form{
 	display: inline-block;
 }
 </style>
-<title>의진 +지은</title>
+<title>Pagination.jsp</title>
 </head>
 <body>
-<%
-	BoardDAO dao = new BoardDAO();
-	int count = dao.pageCnt("board");
-	ArrayList<BoardVO> blist = (ArrayList<BoardVO>)request.getAttribute("list");
-	if(blist != null){
-%>
+	<%
+		BoardDAO dao = new BoardDAO();
+		int count = dao.pageCnt("board");
+	/* 	String tempStart = request.getParameter("page");
+		
+		// 현재 페이지를 받아옴.
+		int startPage = 0;  // limit 시작값, 첫 limit 0, 10
+		int onePageCnt = 10; // 한 페이지에 출력할 행의 개수
+		
+		count = (int)Math.ceil((double)count/(double)onePageCnt);
+		
+		//페이지 수 저장 
+		if(tempStart != null){
+			// 처음에는 실행 되지 않는다.
+			startPage = (Integer.parseInt(tempStart)-1)*onePageCnt;
+		} */
+		
+		//ArrayList<BoardVO> blist = dao.pagenation("board", startPage, onePageCnt);
+		ArrayList<BoardVO> blist = (ArrayList<BoardVO>)request.getAttribute("list");
+		if(blist!=null){
+	%>
 	<!-- Navbar -->
 	<nav id="navbar">
 	<div class="nav_logo">
@@ -61,23 +74,27 @@ form{
 	<table>
 	
 <%
-	for(BoardVO vo : blist){
+	for(int i=0; i< blist.size(); i++){
 %>
 	
-	<!-- <tr>
-	<th>글 번호</th><th>작성자</th><th>작성자</th><th>작성일</th><th>조회수</th>
-	</tr> -->
 	<tr>
-	<td> <%= vo.getNum() %> </td>
-	<td> <%= vo.getWriter() %></td>
-	<td><a href="/bbs/detail?num=<%= vo.getNum() %>"><%= vo.getTitle() %></a></td>
-	<td><%= vo.getWritedate() %></td>
-	<td><%= vo.getCnt() %></td>
+	<th>글 번호</th><th>작성자</th><th>작성자</th><th>작성일</th><th>조회수</th>
+	<td> <%= blist.get(i).getNum() %> </td>
+	<td> <%= blist.get(i).getWriter() %></td>
+	<td><a href="/bbs/detail?num=<%= blist.get(i).getNum() %>"><%= blist.get(i).getTitle() %></a></td>
+	<td><%= blist.get(i).getWritedate() %></td>
+	<td><%= blist.get(i).getCnt() %></td>
 	</tr>
 <%
 	}
 %>
-	</table>
+	</table><br>
+<%
+	for(int i=1; i<=count; i++){ %>
+		<a href="/bbs/board?page=<%= i%>">[<%= i %>]</a>
+		
+	<%}; %>	
+
 <%
 	}
 	if(request.getAttribute("msg") != null){
@@ -88,11 +105,6 @@ form{
 <%
 	}
 %>
-<%
-	for(int i=1; i<= count; i++){ %>
-		<a href="/bbs/board?page=<%= i%>">[<%= i %>]</a>
-		
-	<%}; %>	
 <hr>
 
 <form method="get" action="/bbs/detail">
@@ -108,6 +120,7 @@ form{
 	<input type="search" name="keyword">
 	<button type="submit"name="detail_btn" value="search">검색</button> 
 </form>
-
+	
+	
 </body>
 </html>

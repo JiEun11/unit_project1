@@ -12,4 +12,5 @@ public interface Board {
 	public ArrayList<BoardVO> searchContent(String keyword);
 	public boolean delete(int num);
 	public boolean update(BoardVO vo);
+	public ArrayList<BoardVO> pagenation(String table, int start, int end);
 }

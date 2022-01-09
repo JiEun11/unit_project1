@@ -222,9 +222,9 @@ public class BoardDAO implements Board{
 	 */
 	public void cntIncrease(BoardVO vo) {
 		Connection conn = MySQL.connect();
-		try(PreparedStatement pstmt = conn.prepareStatement("update board set "+
+		try(PreparedStatement pstmt = conn.prepareStatement("UPDATE board SET "+
 						"cnt = cnt + 1 " +
-						"where num = ?");) {
+						"WHERE num = ?");) {
 			pstmt.setInt(1, vo.getNum());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -233,6 +233,62 @@ public class BoardDAO implements Board{
 		}
 		MySQL.close(conn);
 		return;
+	}
+	
+	/*
+	 * Pagination 구현 - 데이터 개수 count 
+	 */
+	public int pageCnt(String table) {
+		int total = 0;
+		int pageCnt = -1;
+		Connection conn = MySQL.connect();
+		try (Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(
+						"SELECT COUNT(*) AS TOTAL FROM "+table);) {
+			if(rs.next()) {
+				total = rs.getInt("TOTAL"); 
+			}
+			pageCnt = total/10;
+			if(total%10 >= 1) {
+				pageCnt += 1;
+				System.out.println("pageCnt:" +pageCnt);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		MySQL.close(conn);
+		System.out.println(pageCnt);
+		return pageCnt;
+	}
+	
+	/*
+	 *  MySQL Limit을 통해 시작,끝 페이지의 데이터들만 저장하여 반환 
+	 */
+	public ArrayList<BoardVO> pagenation(String table, int start, int end){
+		ArrayList<BoardVO> blist = null;
+		Connection conn = MySQL.connect();
+		try(Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT num, writer, title, date_format(writedate,'%Y년 %m월 %d일 %H시 %i분'), cnt FROM " +table+" ORDERS LIMIT "+start+", "+ end);)
+		{
+			blist = new ArrayList<>();
+			BoardVO vo = null;
+			while(rs.next()) {
+				vo = new BoardVO();
+				vo.setNum(rs.getInt(1));
+				vo.setWriter(rs.getString(2));
+				vo.setTitle(rs.getString(3));
+				vo.setWritedate(rs.getString(4));
+				vo.setCnt(rs.getInt(5));
+				blist.add(vo);
+				System.out.println(vo.toString());
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		MySQL.close(conn);
+		return blist;
 	}
 	
 }
