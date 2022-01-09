@@ -9,31 +9,7 @@
 	rel="stylesheet">
 <script src="https://kit.fontawesome.com/3e595d06f7.js"
 	crossorigin="anonymous"></script>
-<style>
-* {
-	font-family:"Poor Story";
-}
-
-td{
-	border-bottom: 2px dotted green;
-	padding-left:20px;
-}
-tr:hover{
-	background-color: pink;
-	font-weight: bold;
-}
-td: nth-child(2){
-	width: 300px;
-}
-
-li{
-	display: inline;
-}
-form{
-
-	display: inline-block;
-}
-</style>
+<link rel="stylesheet" href="css/boardStyle.css" />
 <title>의진 +지은</title>
 </head>
 <body>
@@ -81,14 +57,14 @@ form{
 		<hr>
 	</nav>
 	<table>
-	
+	<tr>
+	<th>글 번호</th><th>작성자</th><th>작성자</th><th>작성일</th><th>조회수</th>
+	</tr>
 <%
 	for(BoardVO vo : blist){
 %>
 	
-	<!-- <tr>
-	<th>글 번호</th><th>작성자</th><th>작성자</th><th>작성일</th><th>조회수</th>
-	</tr> -->
+	
 	<tr>
 	<td> <%= vo.getNum() %> </td>
 	<td> <%= vo.getWriter() %></td>

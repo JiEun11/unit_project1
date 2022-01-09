@@ -69,7 +69,7 @@ public class BoardServlet extends HttpServlet {
 			}
  
 		}	
-		// button 값 없는 Main 접속 시 
+		// button 값 없는 Main 접속 시 ㅁㅁㅁㅁ
 		else {
 			// 1, 2, 3, ,, page 눌렀을 때
 			if( scurrentPage != null) {
