@@ -25,23 +25,19 @@ public class BoardServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("keyword");
-		System.out.println("keyword(start) : " + keyword);
 		if (keyword != null) {
 			keyword = keyword.trim();
-			System.out.println("keyword.equals(\"\") : " + keyword.equals(""));
 		}
 		String search_tagOpt = request.getParameter("search_tag");
-//		String num = request.getParameter("num");
 		String detail_btn = request.getParameter("detail_btn");
 		String scurrentPage = request.getParameter("page");
 		HttpSession session = request.getSession();
 		int currentPage = 1;
-		int pageDevide = 10;
+		
 		
 		BoardDAO dao = new BoardDAO();
-		
-		//////
 		PageVO voPage = new PageVO();
+		int pageDevide = voPage.getPageDivide();
 		
 		if( scurrentPage != null) {
 			currentPage = Integer.parseInt(scurrentPage);	// 현재페이지 int로 변경 
@@ -49,16 +45,15 @@ public class BoardServlet extends HttpServlet {
 		else {
 			currentPage = 1;	// 현재페이지 int로 변경
 			
-			voPage.setCount(dao.pageCnt(voPage.getPageDivide(), search_tagOpt, keyword));
-			voPage.setPageDivide(pageDevide);
+			voPage.setCount(dao.pageCnt(pageDevide, search_tagOpt, keyword));
 			voPage.setWhereParam(search_tagOpt);
 			voPage.setKeyword(keyword);
 			session.setAttribute("page", voPage);
 		}
 		
 		voPage = (PageVO)session.getAttribute("page");
-		int start = (currentPage-1)*voPage.getPageDivide();   // 1, 11, 21, 31 ... 
-		int end = currentPage*voPage.getPageDivide();  // 10, 20, 30, 40 ...
+		int start = (currentPage-1)*pageDevide;   // 1, 11, 21, 31 ... 
+		int end = pageDevide; //currentPage*voPage.getPageDivide();  // 10, 20, 30, 40 ...
 		
 		if(detail_btn != null && detail_btn.equals("search")) { // 검색버튼 누른 경우
 			
@@ -92,14 +87,11 @@ public class BoardServlet extends HttpServlet {
 			}
 			// 그냥 검색 눌러도 동작안함
 			else { // 아무 것도 안 누르고 검색한 경우 그냥 main에 남아있기 
-				System.out.println("그냥 검색 누른 경우");
-				request.setAttribute("list", dao.listAll());
-				if(keyword != null)
-					System.out.println("keyword(그냥 검색) : " + keyword); 
+
+//				request.setAttribute("list", dao.listAll());
 			}
 		// 검색 버튼 안 누른 경우, 그냥 Main 접속 시 
 		}else {
-			System.out.println("/board로 검색한 상태");
 			
 //			System.out.println("currentPage : " + currentPage;
 //			request.setAttribute("list", dao.listAll());
@@ -268,8 +260,8 @@ public class BoardServlet extends HttpServlet {
 			}
 			
 		}
-	
-		request.setAttribute("list", dao.listAll());
+		PageVO voPage = new PageVO();
+		request.setAttribute("list", dao.pagenation("null", "", 0, voPage.getPageDivide()));
 		request.getRequestDispatcher(path).forward(request, response);
 	}
 }

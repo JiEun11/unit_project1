@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import model.dao.BoardDAO;
 import model.vo.BoardVO;
-import model.vo.MembersVO;
+import model.vo.PageVO;
 
 @WebServlet("/detail")
 public class DetailServlet extends HttpServlet {
@@ -26,6 +25,8 @@ public class DetailServlet extends HttpServlet {
 		BoardDAO dao = new BoardDAO();
 		String boardPath = null;
 		String msg = null;
+		
+		PageVO voPage = new PageVO();
 		
 		HttpSession session = request.getSession();
 	
@@ -66,7 +67,12 @@ public class DetailServlet extends HttpServlet {
 			msg = "로그인을 해주세요";
 			boardPath = "/jsp/BoardMain.jsp";
 			request.setAttribute("msg", msg);
-			request.setAttribute("list", dao.listAll());
+			
+//			voPage.setCount(dao.pageCnt(voPage.getPageDivide(), "null", ""));
+//			voPage.setWhereParam("null");
+//			voPage.setKeyword("");
+//			session.setAttribute("page", voPage);
+			request.setAttribute("list", dao.pagenation("null", "", 0, voPage.getPageDivide()));
 		}
 		
 		request.getRequestDispatcher(boardPath).forward(request, response);

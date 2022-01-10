@@ -11,32 +11,6 @@ import model.vo.BoardVO;
 
 public class BoardDAO implements Board{
 	
-	public int totalBoardCount() {
-		int total = -1;
-		Connection conn = MySQL.connect();
-		
-		try(PreparedStatement pstmt = conn.prepareStatement("SELECT COUNT(*) FROM board");) {
-			ResultSet rs = pstmt.executeQuery();
-			if(rs.next()) {
-				total = rs.getInt(1);
-			}
-//			System.out.println("total : " + total);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		MySQL.close(conn);
-		return total;
-	}
-	
-	public ArrayList<BoardVO> page() {
-		
-		ArrayList<BoardVO> blist = null;
-		Connection conn = MySQL.connect();
-		
-		
-		return blist;
-	}
-	
 	@Override
 	/*
 	 *  MainPage에서 전체 리스트 보여주는 method
@@ -300,7 +274,7 @@ public class BoardDAO implements Board{
 			e.printStackTrace();
 		}
 		MySQL.close(conn);
-		System.out.println(pageCount);
+//		System.out.println(pageCount);
 		return pageCount;
 	}
 	
@@ -318,14 +292,14 @@ public class BoardDAO implements Board{
 			pageCount = total/pageDevide;
 			if(total%pageDevide >= 1) {
 				pageCount += 1;
-				System.out.println("pageCnt:" +pageCount);
+//				System.out.println("pageCnt:" +pageCount);
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		MySQL.close(conn);
-		System.out.println(pageCount);
+//		System.out.println(pageCount);
 		return pageCount;
 	}
 	
@@ -343,14 +317,14 @@ public class BoardDAO implements Board{
 			pageCount = total/pageDevide;
 			if(total%pageDevide >= 1) {
 				pageCount += 1;
-				System.out.println("pageCnt:" +pageCount);
+//				System.out.println("pageCnt:" +pageCount);
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		MySQL.close(conn);
-		System.out.println(pageCount);
+//		System.out.println(pageCount);
 		return pageCount;
 	}
 	
@@ -368,14 +342,14 @@ public class BoardDAO implements Board{
 			pageCount = total/pageDevide;
 			if(total%pageDevide >= 1) {
 				pageCount += 1;
-				System.out.println("pageCnt:" +pageCount);
+//				System.out.println("pageCnt:" +pageCount);
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		MySQL.close(conn);
-		System.out.println(pageCount);
+//		System.out.println(pageCount);
 		return pageCount;
 	}
 	
@@ -393,14 +367,14 @@ public class BoardDAO implements Board{
 			pageCount = total/pageDevide;
 			if(total%pageDevide >= 1) {
 				pageCount += 1;
-				System.out.println("pageCnt:" +pageCount);
+//				System.out.println("pageCnt:" +pageCount);
 			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 		MySQL.close(conn);
-		System.out.println(pageCount);
+//		System.out.println(pageCount);
 		return pageCount;
 	}
 	
@@ -435,7 +409,7 @@ public class BoardDAO implements Board{
 				vo.setWritedate(rs.getString(4));
 				vo.setCnt(rs.getInt(5));
 				blist.add(vo);
-				System.out.println(vo.toString());
+//				System.out.println(vo.toString());
 			}
 		}
 		catch(SQLException e) {

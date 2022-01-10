@@ -2,7 +2,7 @@ package model.vo;
 
 public class PageVO {
 
-	private int pageDivide = 10;
+	private int pageDivide = 8;
 	private int count;
 	private String whereParam;
 	private String keyword;
@@ -35,6 +35,12 @@ public class PageVO {
 		return keyword;
 	}
 	
+	@Override
+	public String toString() {
+		return "PageVO [pageDivide=" + pageDivide + ", count=" + count + ", whereParam=" + whereParam + ", keyword="
+				+ keyword + "]";
+	}
+
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
 	}
