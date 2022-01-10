@@ -142,7 +142,7 @@ public class BoardServlet extends HttpServlet {
 					if(result) {
 						request.setAttribute("msg", b_writer+"님의 글이 성공적으로 수정되었습니다.");
 					}else {
-						request.setAttribute("msg", b_writer +"님의 글이 수정되지 않았습니다.");
+						request.setAttribute("msg", b_writer +"님의 글 수정에 실패했습니다.");
 					}
 				}
 			}
