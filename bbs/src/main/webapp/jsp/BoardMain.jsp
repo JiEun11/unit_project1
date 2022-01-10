@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="model.vo.BoardVO, java.util.ArrayList, model.dao.BoardDAO"%>
+<%@ page import="model.vo.BoardVO, java.util.ArrayList, model.dao.BoardDAO, model.vo.PageVO"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,6 +14,11 @@
 <body>
 
 <%
+	PageVO voPage = (PageVO)session.getAttribute("page");
+	int count = voPage.getCount();
+	//BoardDAO dao = new BoardDAO();
+	//int count = (Integer)request.getAttribute("count");
+	//System.out.println(count);
 	ArrayList<BoardVO> blist = (ArrayList<BoardVO>)request.getAttribute("list");
 	if(blist != null){
 %>
@@ -34,7 +39,7 @@
 		%>
 		<i class="fas fa-user-circle" style="font-size: 40px; color: #4caf50;"></i> ID : ${sessionScope.user.id }
 		<br>
-		<form method="post" action="/bbs/memcheck">
+		<form method="post" action="/bbs/board">
 			<button type="submit" class="nav_login" name="mem_fbtn" value="mem_info">개인정보설정</button>
 			<button type="submit" class="nav_login" name="mem_btn" value="logout">로그아웃</button>
 		</form>
@@ -64,6 +69,13 @@
 	}
 %>
 	</table>
+	<div class="pagenation">
+	<%
+	for(int i=1; i<= count; i++){ %>
+		<a href="/bbs/board?page=<%= i%>" style="text-align: center;">[<%= i %>]</a>
+		
+	<%}; %>	 
+	</div>
 <%
 	}
 	if(request.getAttribute("msg") != null){
@@ -82,6 +94,7 @@
 	
 	<form method="get" action="/bbs/board">
 		<select name="search_tag">
+			<option value="null">검색항목</option>	
 			<option value="title">제목</option>
 			<option value="writer">작성자</option>
 			<option value="content">내용</option>

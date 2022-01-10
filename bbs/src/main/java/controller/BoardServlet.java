@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -17,6 +16,7 @@ import model.dao.BoardDAO;
 import model.dao.MembersDAO;
 import model.vo.BoardVO;
 import model.vo.MembersVO;
+import model.vo.PageVO;
 
 
 @WebServlet("/board")
@@ -25,52 +25,89 @@ public class BoardServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("keyword");
+		System.out.println("keyword(start) : " + keyword);
+		if (keyword != null) {
+			keyword = keyword.trim();
+			System.out.println("keyword.equals(\"\") : " + keyword.equals(""));
+		}
 		String search_tagOpt = request.getParameter("search_tag");
 //		String num = request.getParameter("num");
 		String detail_btn = request.getParameter("detail_btn");
-//		String scurrentPage = request.getParameter("page");
-//		int currentPage = 1;
+		String scurrentPage = request.getParameter("page");
+		HttpSession session = request.getSession();
+		int currentPage = 1;
+		int pageDevide = 10;
 		
-		Board dao = new BoardDAO();
-		 
+		BoardDAO dao = new BoardDAO();
+		
+		//////
+		PageVO voPage = new PageVO();
+		
+		if( scurrentPage != null) {
+			currentPage = Integer.parseInt(scurrentPage);	// 현재페이지 int로 변경 
+		}
+		else {
+			currentPage = 1;	// 현재페이지 int로 변경
+			
+			voPage.setCount(dao.pageCnt(voPage.getPageDivide(), search_tagOpt, keyword));
+			voPage.setPageDivide(pageDevide);
+			voPage.setWhereParam(search_tagOpt);
+			voPage.setKeyword(keyword);
+			session.setAttribute("page", voPage);
+		}
+		
+		voPage = (PageVO)session.getAttribute("page");
+		int start = (currentPage-1)*voPage.getPageDivide();   // 1, 11, 21, 31 ... 
+		int end = currentPage*voPage.getPageDivide();  // 10, 20, 30, 40 ...
+		
 		if(detail_btn != null && detail_btn.equals("search")) { // 검색버튼 누른 경우
 			
 			if(keyword != null && search_tagOpt.equals("title")) { // title로 검색한 경우 
 				ArrayList<BoardVO> list = dao.searchTitle(keyword);
 				
 				if(list!=null &&list.size() == 0) { // 없는 타이틀 검색한 경우의 처리 
-					request.setAttribute("msg", keyword+"(이)가 포함된 글이 없습니다.");
-					request.setAttribute("list", dao.listAll());
+//					request.setAttribute("msg", keyword+"(이)가 포함된 글이 없습니다.");
+					
 				}else {
-					request.setAttribute("list", list);
+//					request.setAttribute("list", list);
 				}
 			}else if(keyword!= null && search_tagOpt.equals("writer")) { // writer로 검색한 경우 
 				ArrayList<BoardVO> list = dao.searchWriter(keyword);
 				
 				if(list != null && list.size() == 0) { // 없는 작성자로 검색한 경우의 처리 
-					request.setAttribute("msg", keyword +"(이)가 포함된 글이 없습니다.");
-					request.setAttribute("list", dao.listAll());
+//					request.setAttribute("msg", keyword +"(이)가 포함된 글이 없습니다.");
 				}else {
-					request.setAttribute("list", list);
+//					request.setAttribute("list", list);
 				}
 			
 			} else if(keyword != null && search_tagOpt.equals("content")) {
 				ArrayList<BoardVO> list = dao.searchContent(keyword);
 				
 				if(list != null && list.size() == 0) { // 없는 작성자로 검색한 경우의 처리 
-					request.setAttribute("msg", keyword +"(이)가 포함된 글이 없습니다.");
-					request.setAttribute("list", dao.listAll());
+//					request.setAttribute("msg", keyword +"(이)가 포함된 글이 없습니다.");
 				}else {
-					request.setAttribute("list", list);
+//					request.setAttribute("list", list);
+					
 				}	
 			}
+			// 그냥 검색 눌러도 동작안함
 			else { // 아무 것도 안 누르고 검색한 경우 그냥 main에 남아있기 
+				System.out.println("그냥 검색 누른 경우");
 				request.setAttribute("list", dao.listAll());
+				if(keyword != null)
+					System.out.println("keyword(그냥 검색) : " + keyword); 
 			}
 		// 검색 버튼 안 누른 경우, 그냥 Main 접속 시 
 		}else {
-			request.setAttribute("list", dao.listAll());
+			System.out.println("/board로 검색한 상태");
+			
+//			System.out.println("currentPage : " + currentPage;
+//			request.setAttribute("list", dao.listAll());
+//			if(keyword != null)
+//				System.out.println("keyword(검색 안누른 경우) : " + keyword);
 		}
+		
+		request.setAttribute("list", dao.pagenation(voPage.getWhereParam(), voPage.getKeyword(), start, end));
 		
 		request.getRequestDispatcher("/jsp/BoardMain.jsp").forward(request, response);
 	}

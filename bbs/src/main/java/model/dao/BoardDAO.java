@@ -261,20 +261,137 @@ public class BoardDAO implements Board{
 	}
 	
 	/*
-	 * Pagination 구현 - 데이터 개수 count 
+	 * Pagination 구현 - 데이터 개수 count , 1. 나눌 페이지 갯수 2. table 3. where 절 인자값 
+	 * 					(1) 모든 글 카운트 null (2) 컨텐츠 , (3) 제목 , (4) 작성자
+	 * 					select count(*) from ?; select count(*) from ? where writer like '%%';
+	 * 
+	 *  		if("null".equals(whereParam)
 	 */
-	public int pageCnt(String table) {
+	
+	public int pageCnt(int pageDevide, String whereParam, String keyword) {
 		int total = 0;
 		int pageCount = -1;
+		//int pageDevide = 10;
 		Connection conn = MySQL.connect();
+		
+		String SQL = null;
+		
+		// 전체 출력
+		if(whereParam == null || "null".equals(whereParam)) { 
+			SQL = "SELECT COUNT(*) FROM board";
+		}
+		// writer, title, content가 입력되는 경우에 따라 처리
+		else {
+			SQL = "SELECT COUNT(IFNULL("+ whereParam +", 'null')) FROM board WHERE "+ whereParam +" like '%" + keyword + "%'";
+		}
+
 		try (Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(
-						"SELECT COUNT(*) AS TOTAL FROM "+table);) {
+				ResultSet rs = stmt.executeQuery(SQL);) {
 			if(rs.next()) {
-				total = rs.getInt("TOTAL"); 
+				total = rs.getInt(1); 
 			}
-			pageCount = total/10;
-			if(total%10 >= 1) {
+			pageCount = total/pageDevide;
+			if(total%pageDevide >= 1) {
+				pageCount += 1;
+				System.out.println("pageCnt:" +pageCount);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		MySQL.close(conn);
+		System.out.println(pageCount);
+		return pageCount;
+	}
+	
+	public int pageCntAll() {
+		int total = 0;
+		int pageCount = -1;
+		int pageDevide = 10;
+		Connection conn = MySQL.connect();
+
+		try (Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM board");) {
+			if(rs.next()) {
+				total = rs.getInt(1); 
+			}
+			pageCount = total/pageDevide;
+			if(total%pageDevide >= 1) {
+				pageCount += 1;
+				System.out.println("pageCnt:" +pageCount);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		MySQL.close(conn);
+		System.out.println(pageCount);
+		return pageCount;
+	}
+	
+	public int pageCntTitle(String keyword) {
+		int total = 0;
+		int pageCount = -1;
+		int pageDevide = 10;
+		Connection conn = MySQL.connect();
+
+		try (Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery("SELECT COUNT(IFNULL(title, 'null')) FROM board WHERE title like '%" + keyword + "%'");) {
+			if(rs.next()) {
+				total = rs.getInt(1); 
+			}
+			pageCount = total/pageDevide;
+			if(total%pageDevide >= 1) {
+				pageCount += 1;
+				System.out.println("pageCnt:" +pageCount);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		MySQL.close(conn);
+		System.out.println(pageCount);
+		return pageCount;
+	}
+	
+	public int pageCntWriter(String keyword) {
+		int total = 0;
+		int pageCount = -1;
+		int pageDevide = 10;
+		Connection conn = MySQL.connect();
+
+		try (Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery("SELECT COUNT(IFNULL(writer, 'null')) FROM board WHERE title like '%" + keyword + "%'");) {
+			if(rs.next()) {
+				total = rs.getInt(1); 
+			}
+			pageCount = total/pageDevide;
+			if(total%pageDevide >= 1) {
+				pageCount += 1;
+				System.out.println("pageCnt:" +pageCount);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		MySQL.close(conn);
+		System.out.println(pageCount);
+		return pageCount;
+	}
+	
+	public int pageCntContent(String keyword) {
+		int total = 0;
+		int pageCount = -1;
+		int pageDevide = 10;
+		Connection conn = MySQL.connect();
+
+		try (Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery("SELECT COUNT(IFNULL(content, 'null')) FROM board WHERE title like '%" + keyword + "%'");) {
+			if(rs.next()) {
+				total = rs.getInt(1); 
+			}
+			pageCount = total/pageDevide;
+			if(total%pageDevide >= 1) {
 				pageCount += 1;
 				System.out.println("pageCnt:" +pageCount);
 			}
@@ -290,12 +407,23 @@ public class BoardDAO implements Board{
 	/*
 	 *  MySQL Limit을 통해 시작,끝 페이지의 데이터들만 저장하여 반환 
 	 */
-	public ArrayList<BoardVO> pagenation(String table, int start, int end){
+	public ArrayList<BoardVO> pagenation(String whereParam, String keyword, int start, int end){
 		ArrayList<BoardVO> blist = null;
 		Connection conn = MySQL.connect();
+		
+		String SQL = null;
+		
+		// 전체 출력
+		if(whereParam == null || "null".equals(whereParam)) { 
+			SQL = "SELECT num, writer, title, date_format(writedate,'%Y년 %m월 %d일 %H시 %i분'), cnt FROM board ORDER BY writedate DESC LIMIT "+start+", "+ end;
+		}
+		// writer, title, content가 입력되는 경우에 따라 처리
+		else {
+			SQL = "SELECT num, writer, title, date_format(writedate,'%Y년 %m월 %d일 %H시 %i분'), cnt FROM board WHERE " + whereParam + " LIKE '%" + keyword + "%' ORDER BY writedate DESC LIMIT "+start+", "+ end;
+		}
+		
 		try(Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT num, writer, title, date_format(writedate,'%Y년 %m월 %d일 %H시 %i분'), cnt FROM " 
-		+ table+ " ORDER BY writedate DESC LIMIT "+start+", "+ end);)
+			ResultSet rs = stmt.executeQuery(SQL);)
 		{
 			blist = new ArrayList<>();
 			BoardVO vo = null;

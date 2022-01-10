@@ -13,9 +13,9 @@
 <div class="memberinfopage">
 	<h1>"개인정보 수정"</h1>
 	<form method="post" action="/bbs/board">
-		<input readonly id="id" name="id" value=${ sessionScope.user.id }><br>
-		<input type="text" name="password" value=${ sessionScope.user.password } required><br>
-		<input type="text" name="name" value=${ sessionScope.user.name } required><br>
+		ID : <input readonly id="id" name="id" value=${ sessionScope.user.id }><br>
+		PW : <input type="text" name="password" value=${ sessionScope.user.password } required><br>
+		이름 : <input type="text" name="name" value=${ sessionScope.user.name } required><br>
 		<button type="submit" name="mem_btn" value="mem_update">정보수정</button>
 		<button type="reset" value="reset">재작성</button>
 		<button type="submit" name="mem_btn" value="sign-out">회원탈퇴</button>
