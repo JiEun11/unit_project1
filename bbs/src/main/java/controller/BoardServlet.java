@@ -107,10 +107,13 @@ public class BoardServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		
-		Board dao = new BoardDAO();
+		BoardDAO dao = new BoardDAO();
 		String path = null;
 		String isBoard = request.getParameter("isBoard");
-				
+		
+		PageVO voPage = new PageVO();
+		HttpSession session = request.getSession();
+		
 		if(isBoard != null) {
 			
 			String num = request.getParameter("num");
@@ -155,6 +158,11 @@ public class BoardServlet extends HttpServlet {
 				result = dao.insert(boardVO);
 				
 				if(result) {
+					voPage = (PageVO)session.getAttribute("page");
+					voPage.setCount(dao.pageCnt(voPage.getPageDivide(), voPage.getWhereParam(), voPage.getKeyword()));
+					
+					session.setAttribute("page", voPage);
+					
 					request.setAttribute("msg", b_writer+"님의 글이 성공적으로 작성되었습니다.");
 				}else {
 					request.setAttribute("msg", b_writer +"님의 글이 작성되지 않았습니다.");
@@ -173,7 +181,8 @@ public class BoardServlet extends HttpServlet {
 			String mem_fbtn = request.getParameter("mem_fbtn");
 			
 			MembersDAO daoMem = new MembersDAO();
-			HttpSession session = request.getSession();
+			session = request.getSession();
+			
 			String msg = null;
 			
 			if(mem_fbtn != null) {
@@ -260,7 +269,7 @@ public class BoardServlet extends HttpServlet {
 			}
 			
 		}
-		PageVO voPage = new PageVO();
+//		PageVO voPage = new PageVO();
 		request.setAttribute("list", dao.pagenation("null", "", 0, voPage.getPageDivide()));
 		request.getRequestDispatcher(path).forward(request, response);
 	}
